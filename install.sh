@@ -170,24 +170,19 @@ echo -e "* Create server config file"
 
 sudo touch /etc/${OE_CONFIG}.conf
 echo -e "* Creating server config file"
-sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/${OE_CONFIG}.conf"
-if [ $GENERATE_RANDOM_PASSWORD = "True" ]; then
-    echo -e "* Generating random admin password"
-    OE_SUPERADMIN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
-fi
-sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
-if [ $OE_VERSION > "11.0" ];then
-    sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
-else
-    sudo su root -c "printf 'xmlrpc_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
-fi
-sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}.conf"
 
-if [ $IS_ENTERPRISE = "True" ]; then
-    sudo su root -c "printf 'addons_path=${OE_HOME}/enterprise/addons,${OE_HOME_EXT}/addons\n' >> /etc/${OE_CONFIG}.conf"
-else
-    sudo su root -c "printf 'addons_path=${OE_HOME_EXT}/addons,${OE_HOME}/custom/addons\n' >> /etc/${OE_CONFIG}.conf"
-fi
+sudo su root -c "printf 'workers=5\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'addons_path=/odoo/odoo-server/addons,/odoo/custom/addons\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'admin_passwd=YDg3mT2S1aih49oB\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'data_dir=/odoo/data\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'db_host=connex-rds.rubikxstores.com\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'db_user=connex_admin\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'db_password=CYX*knr0vak1enb.jdw!\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'xmlrpc_port=8069\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'gevent_port=8072\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'proxy_mode=True\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'logrotate=True\n' >> /etc/${OE_CONFIG}.conf"
+
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
 
